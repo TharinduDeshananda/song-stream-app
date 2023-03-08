@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="songservice" />
+        <module name="custom-discovery-server" />
+        <module name="custom-authorization-server" />
+        <module name="custom-config-server" />
+        <module name="userservice" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="user-service" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="custom-authorization-server" options="-parameters" />
+      <module name="custom-config-server" options="-parameters" />
+      <module name="custom-discovery-server" options="-parameters" />
+      <module name="songservice" options="-parameters" />
+      <module name="userservice" options="-parameters" />
+    </option>
+  </component>
+</project>
