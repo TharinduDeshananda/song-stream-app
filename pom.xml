@@ -15,6 +15,7 @@
         <module>userservice</module>
         <module>custom-authorization-server</module>
         <module>custom-api-gateway</module>
+        <module>notification-service</module>
     </modules>
 
     <properties>

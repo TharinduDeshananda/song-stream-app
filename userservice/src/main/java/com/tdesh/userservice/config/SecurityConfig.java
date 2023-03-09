@@ -12,6 +12,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         return httpSecurity
+                .cors().disable()
                 .oauth2ResourceServer(r->r.jwt(j->j.jwkSetUri("http://localhost:9090/oauth2/jwks")))
 
                 .authorizeHttpRequests().anyRequest().authenticated().and()
