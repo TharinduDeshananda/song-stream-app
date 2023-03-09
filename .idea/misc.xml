@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/songservice/pom.xml" />
         <option value="$PROJECT_DIR$/custom-discovery-server/pom.xml" />
         <option value="$PROJECT_DIR$/custom-authorization-server/pom.xml" />
+        <option value="$PROJECT_DIR$/custom-api-gateway/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

@@ -10,6 +10,7 @@
         <module name="songservice" />
         <module name="custom-discovery-server" />
         <module name="custom-authorization-server" />
+        <module name="custom-api-gateway" />
         <module name="custom-config-server" />
         <module name="userservice" />
       </profile>
@@ -20,6 +21,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="custom-api-gateway" options="-parameters" />
       <module name="custom-authorization-server" options="-parameters" />
       <module name="custom-config-server" options="-parameters" />
       <module name="custom-discovery-server" options="-parameters" />
