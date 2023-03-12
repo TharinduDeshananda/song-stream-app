@@ -1,29 +1,57 @@
 package com.tdesh.userservice.controller;
 
+import com.tdesh.userservice.dto.request.UserRequestDTO;
+import com.tdesh.userservice.dto.response.CommonResponse;
+import com.tdesh.userservice.dto.response.UserResponseDTO;
+import com.tdesh.userservice.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.tdesh.userservice.config.Constants.SUCCESS_CODE;
+import static com.tdesh.userservice.config.Constants.SUCCESS_RESPONSE;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    WebClient.Builder webClientBuilder;
+    private final WebClient.Builder webClientBuilder;
+    private final UserService userService;
 
-    @GetMapping("/get-shared")
-    public ResponseEntity<Mono<String>> getSharedValueFromSong() throws URISyntaxException {
+    @GetMapping("/{userId}")
+    public ResponseEntity<CommonResponse<UserResponseDTO>> getUser(@PathVariable long userId){
+        return ResponseEntity.ok(new CommonResponse<>(SUCCESS_CODE,userService.getUser(userId),SUCCESS_RESPONSE));
+    }
+    @PostMapping()
+    public ResponseEntity<CommonResponse<String>> saveUser(@RequestBody UserRequestDTO dto){
+        userService.saveUser(dto);
+        return ResponseEntity.ok(new CommonResponse<>(SUCCESS_CODE,null,SUCCESS_RESPONSE));
+    }
 
-        Mono<String> stringMono = webClientBuilder.build().get().uri(new URI("http://song-service/song/shared")).retrieve().bodyToMono(String.class);
+    @GetMapping()
+    public ResponseEntity<CommonResponse<Page<UserResponseDTO>>> getUsersFiltered(
+            @RequestParam(required = false,defaultValue = "0")long userId,
+            @RequestParam(required = false)String userName,
+            @RequestParam(required = false)String email,
+            @RequestParam(required = false,defaultValue = "0") int page,
+            @RequestParam(required = false,defaultValue = "0")int size){
 
-        return ResponseEntity.ok(stringMono);
+        Page<UserResponseDTO> allUsers = userService.getAllUsers(userId, userName, email,page,size);
+        return ResponseEntity.ok(new CommonResponse<>(SUCCESS_CODE,allUsers,SUCCESS_RESPONSE));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable String email){
+
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
 }
