@@ -1,6 +1,8 @@
 package com.tdesh.userservice.controller;
 
+import com.tdesh.userservice.dto.request.UserPublisherResponseDTO;
 import com.tdesh.userservice.dto.request.UserRequestDTO;
+import com.tdesh.userservice.dto.request.UserSubscriberResponseDTO;
 import com.tdesh.userservice.dto.response.CommonResponse;
 import com.tdesh.userservice.dto.response.UserResponseDTO;
 import com.tdesh.userservice.service.UserService;
@@ -54,4 +56,27 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
+    @GetMapping("/email/{email}/subscribers")
+    public ResponseEntity<UserSubscriberResponseDTO> getUserSubscribersByEmail(@PathVariable String email){
+
+        return ResponseEntity.ok(userService.getUserSubscribers(email));
+    }
+
+    @GetMapping("/email/{email}/publishers")
+    public ResponseEntity<UserPublisherResponseDTO> getUserPublishersByEmail(@PathVariable String email){
+
+        return ResponseEntity.ok(userService.getUserPublishers(email));
+    }
+
+    @PostMapping("/add-subscription")
+    public ResponseEntity<CommonResponse<String>> addSubscription(@RequestParam long subId,@RequestParam long pubId){
+        userService.addSubscriberToPublisher(subId,pubId);
+        return ResponseEntity.ok(new CommonResponse<>(SUCCESS_CODE,null,SUCCESS_RESPONSE));
+    }
+
+    @PostMapping("/remove-subscription")
+    public ResponseEntity<CommonResponse<String>> removeSubscription(@RequestParam long subId,@RequestParam long pubId){
+        userService.removeSubscriberFromPublisher(subId,pubId);
+        return ResponseEntity.ok(new CommonResponse<>(SUCCESS_CODE,null,SUCCESS_RESPONSE));
+    }
 }

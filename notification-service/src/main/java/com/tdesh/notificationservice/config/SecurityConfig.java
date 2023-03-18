@@ -13,9 +13,9 @@ public class SecurityConfig {
 
         return httpSecurity
                 .cors().disable()
-                .authorizeHttpRequests().anyRequest().authenticated()
+                .authorizeHttpRequests().anyRequest().permitAll()
                 .and()
-                .oauth2ResourceServer(r->r.jwt(j->j.jwkSetUri("http://localhost:9090/oauth2/jwks")))
+//                .oauth2ResourceServer(r->r.jwt(j->j.jwkSetUri("http://localhost:9090/oauth2/jwks")))
                 .build();
     }
 }

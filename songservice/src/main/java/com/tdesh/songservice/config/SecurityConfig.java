@@ -13,9 +13,10 @@ public class SecurityConfig {
 
         return httpSecurity
                 .cors().disable()
+                .csrf().disable()
                 .oauth2ResourceServer(r->r.jwt(j->j.jwkSetUri("http://localhost:9090/oauth2/jwks")))
 
-                .authorizeHttpRequests().anyRequest().permitAll().and()
+                .authorizeHttpRequests().anyRequest().authenticated().and()
                 .build();
     }
 

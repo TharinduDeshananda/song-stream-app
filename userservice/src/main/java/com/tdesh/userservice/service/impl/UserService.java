@@ -1,6 +1,8 @@
 package com.tdesh.userservice.service.impl;
 
+import com.tdesh.userservice.dto.request.UserPublisherResponseDTO;
 import com.tdesh.userservice.dto.request.UserRequestDTO;
+import com.tdesh.userservice.dto.request.UserSubscriberResponseDTO;
 import com.tdesh.userservice.dto.response.UserResponseDTO;
 import com.tdesh.userservice.entity.CustomUser;
 import com.tdesh.userservice.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -64,6 +67,80 @@ public class UserService implements com.tdesh.userservice.service.UserService {
             return usersFiltered;
         } catch (Exception e) {
             log.info("Method getAllUsers userId {} , userName {} , email: {} failed",userId,userName,email);
+            throw e;
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public void addSubscriberToPublisher(long subscriberId, long publisherId) {
+        try {
+            log.info("Method addSubscriberToPublisher subscriber: {} , publisher: {}",subscriberId,publisherId);
+            CustomUser subscriber = userRepository.findById(subscriberId).orElseThrow(()->new RuntimeException("Not found subscriber"));
+            CustomUser publisher = userRepository.findById(publisherId).orElseThrow(()->new RuntimeException("Not found publisher"));
+
+
+            subscriber.getPublishers().add(publisher);
+            publisher.getSubscribers().add(subscriber);
+
+            userRepository.save(subscriber);
+            userRepository.save(publisher);
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public void removeSubscriberFromPublisher(long subscriberId, long publisherId) {
+        try {
+            log.info("Method removeSubscriberFromPublisher subscriber: {} , publisher: {}",subscriberId,publisherId);
+            CustomUser subscriber = userRepository.findById(subscriberId).orElseThrow(()->new RuntimeException("Not found subscriber"));
+            CustomUser publisher = userRepository.findById(publisherId).orElseThrow(()->new RuntimeException("Not found publisher"));
+
+
+            subscriber.getPublishers().remove(publisher);
+            publisher.getSubscribers().remove(subscriber);
+
+            userRepository.save(subscriber);
+            userRepository.save(publisher);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public UserPublisherResponseDTO getUserPublishers(String email) {
+        try {
+            log.info("Method getUserPublishers {}",email);
+
+            CustomUser customUser = userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("OPeration failed, user not found"));
+
+            return UserPublisherResponseDTO.builder()
+                    .userId(customUser.getUserId())
+                    .email(customUser.getEmail())
+                    .publishers(customUser.getPublishers().stream().map(p->modelMapper.map(p,UserResponseDTO.class)).collect(Collectors.toList()))
+                    .build();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public UserSubscriberResponseDTO getUserSubscribers(String email) {
+        try {
+            log.info("Method getUserSubscribers {}",email);
+            CustomUser customUser = userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("OPeration failed, user not found"));
+
+            return UserSubscriberResponseDTO.builder()
+                    .userId(customUser.getUserId())
+                    .email(customUser.getEmail())
+                    .subscribers(customUser.getSubscribers().stream().map(p->modelMapper.map(p,UserResponseDTO.class)).collect(Collectors.toList()))
+                    .build();
+        } catch (Exception e) {
             throw e;
         }
     }

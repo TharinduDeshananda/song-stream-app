@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 @Component
 public class S3Util {
 
-    @Value("${aws.s3.bucket.bucket.name}")
+    @Value("${aws.s3.bucket.name}")
     private String bucketName;
 
-    @Value("${aws.s3.bucket.bucket.domain}")
+    @Value("${aws.s3.bucket.domain}")
     private String bucketDomain;
 
     @Autowired
@@ -40,7 +40,7 @@ public class S3Util {
 
         try {
             String contentType = file.getContentType();
-            return uploadInputStreamToS3bucket(folderName+"/"+fileName,
+            return uploadInputStreamToS3bucket(folderName,fileName,
                     file.getInputStream(), contentType);
 
         } catch (IOException e) {
@@ -49,7 +49,7 @@ public class S3Util {
         }
     }
 
-    public String uploadInputStreamToS3bucket(String fileName, InputStream inputStream, String contentType) {
+    public String uploadInputStreamToS3bucket(String folderName,String fileName, InputStream inputStream, String contentType) {
         TransferManagerBuilder transferManagerBuilder = TransferManagerBuilder.standard();
         transferManagerBuilder.setS3Client(amazonS3Client);
         TransferManager transferManager = transferManagerBuilder.build();
@@ -68,7 +68,7 @@ public class S3Util {
             log.info("is upload done: " + upload.isDone());
             log.info("upload info: " + upload.waitForUploadResult().getKey());
 //            return bucketUrl + "/" + fileName;
-            return bucketDomain + "/" + fileName;
+            return bucketDomain + "/" + folderName+"/"+fileName;
         } catch (Exception e) {
             log.info("uploading image failed");
             log.info(e.getMessage());
