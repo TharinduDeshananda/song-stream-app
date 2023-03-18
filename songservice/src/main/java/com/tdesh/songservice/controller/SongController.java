@@ -4,14 +4,11 @@ import com.tdesh.songservice.dto.SongSaveRequestDTO;
 import com.tdesh.songservice.service.SongService;
 import com.tdesh.songservice.util.S3Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 
@@ -42,6 +39,11 @@ public class SongController {
 
         songService.addUserSong(dto);
         return ResponseEntity.ok("Done!!");
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity getUserUploadsDetails(@PathVariable long userId,@RequestParam(required = false,defaultValue = "0")int page,@RequestParam(required = false,defaultValue = "0")int size){
+        return ResponseEntity.ok(songService.getUserUploadDetails(userId,size!=0? PageRequest.of(page,size):Pageable.unpaged()));
     }
 
 
