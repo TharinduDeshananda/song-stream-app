@@ -54,9 +54,10 @@ public class NotificationServiceListenerImpl implements NotificationServiceListe
 
                     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
                     simpleMailMessage.setFrom("tdeshananda@gmail.com");
+//                    simpleMailMessage.setTo(dto.getEmail());
                     simpleMailMessage.setTo("tdeshananda@gmail.com");
-                    simpleMailMessage.setSubject("User added new song");
-                    simpleMailMessage.setText("New Song added by user");
+                    simpleMailMessage.setSubject("User added new song with name: "+dto.getAttributes().get("name"));
+                    simpleMailMessage.setText("New Song added by user "+dto.getAttributes().get("name"));
 
                     mailList.add(simpleMailMessage);
 

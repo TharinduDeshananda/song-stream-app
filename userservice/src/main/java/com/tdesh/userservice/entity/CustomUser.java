@@ -19,6 +19,7 @@ public class CustomUser {
     @GeneratedValue
     private long userId;
     private String userName;
+    @Column(unique = true)
     private String email;
     private String password;
 
@@ -40,8 +41,8 @@ public class CustomUser {
     @PrePersist
     @PreUpdate
     public void checkForConstraints(){
-        if(subscribers.stream().anyMatch(s->s.userId == userId))throw new RuntimeException("Operation failed, cannot subscribe to self");
-        if(publishers.stream().anyMatch(p->p.userId == userId))throw new RuntimeException("Operation failed, cannot add self as a publisher");
+        if(subscribers!=null && subscribers.stream().anyMatch(s->s.userId == userId))throw new RuntimeException("Operation failed, cannot subscribe to self");
+        if(publishers!=null && publishers.stream().anyMatch(p->p.userId == userId))throw new RuntimeException("Operation failed, cannot add self as a publisher");
     }
 
 }

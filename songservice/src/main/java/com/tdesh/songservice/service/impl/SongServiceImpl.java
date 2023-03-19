@@ -24,7 +24,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,10 +78,13 @@ public class SongServiceImpl implements SongService {
 
             if(subscriberDto==null|| subscriberDto.getSubscribers()==null)throw new RuntimeException("Operation failed, subscribers not found");
             for (UserResponseDTO subscriber : subscriberDto.getSubscribers()) {
+
+                Map<String,String> attributes = new HashMap<>();
+                attributes.put("name",dto.getUploadTitle());
                 NotificationRequestDTO notificationRequestDTO = NotificationRequestDTO.builder()
                         .email(subscriber.getEmail())
                         .emailType(EmailType.NEW_SONG_ADDED)
-                        .attributes(null)
+                        .attributes(attributes)
                         .build();
 
                 ObjectMapper objectMapper = new ObjectMapper();

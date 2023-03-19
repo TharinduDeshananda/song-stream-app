@@ -1,5 +1,6 @@
 package com.tdesh.songservice.controller;
 
+import com.tdesh.songservice.dto.CommonResponse;
 import com.tdesh.songservice.dto.SongSaveRequestDTO;
 import com.tdesh.songservice.service.SongService;
 import com.tdesh.songservice.util.S3Util;
@@ -35,10 +36,10 @@ public class SongController {
     }
 
     @PostMapping("/upload-test-file")
-    public ResponseEntity<String> uploadFile(@ModelAttribute SongSaveRequestDTO dto) throws IOException {
+    public ResponseEntity<CommonResponse<String>> uploadFile(@ModelAttribute SongSaveRequestDTO dto) throws IOException {
 
         songService.addUserSong(dto);
-        return ResponseEntity.ok("Done!!");
+        return ResponseEntity.ok(new CommonResponse<>(0,null,"OPERATION SUCCESS"));
     }
 
     @GetMapping("/user/{userId}")
